@@ -100,8 +100,9 @@ $form.Controls.Add($localfilebutton)
 
 $localfilebutton.Add_Click({
         $fileDialog = New-Object System.Windows.Forms.OpenFileDialog
+        $fileDialog.Filter = "PNG files (*.png)|*.png|GIF files (*.gif)|*.gif|PDF files (*.pdf)|*.pdf|ZIP files (*.zip)|*.zip|Executable files (*.exe)|*.exe|All files (*.*)|*.*"
         if ($fileDialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
-            $localfiletextBox.Text = $fileDialog.FileName
+            $textBox.Text = $fileDialog.FileName
         }
     })
 
