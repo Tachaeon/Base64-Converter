@@ -102,7 +102,7 @@ $localfilebutton.Add_Click({
         $fileDialog = New-Object System.Windows.Forms.OpenFileDialog
         $fileDialog.Filter = "PNG files (*.png)|*.png|GIF files (*.gif)|*.gif|PDF files (*.pdf)|*.pdf|ZIP files (*.zip)|*.zip|Executable files (*.exe)|*.exe|All files (*.*)|*.*"
         if ($fileDialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
-            $textBox.Text = $fileDialog.FileName
+            $localfiletextBox.Text = $fileDialog.FileName
         }
     })
 
@@ -131,7 +131,7 @@ $frombase64Button.Add_Click({
             [System.Windows.Forms.MessageBox]::Show("You file has been saved here:`n`n$outputDirectory", "Clipboard --> Base64", 'OK', 'Information')
         }
         catch {
-            Error
+            Get-Error
         }
     })
 
@@ -152,7 +152,7 @@ $tobase64button.Add_Click({
                 Base64
             }
             catch {
-                Error
+                Get-Error
             }
         }
         if ($urltextBox.text) {
@@ -167,7 +167,7 @@ $tobase64button.Add_Click({
                 Base64
             }
             catch {
-                Error
+                Get-Error
             }
         }
     })
