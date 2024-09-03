@@ -65,7 +65,7 @@ function Base64 {
     [System.Windows.Forms.MessageBox]::Show("Base64 sent to clipboard.", "Base64 --> Clipboard", 'OK', 'Information')
 }
 
-function Error {
+function Get-Error {
     [System.Windows.Forms.MessageBox]::Show("$($Error[0].Exception.Message)", 'ERROR', 'OK', 'ERROR')
 }
 
