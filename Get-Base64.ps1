@@ -78,7 +78,7 @@ Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
 $form = New-Object System.Windows.Forms.Form
-$form.Text = "Base64 Converter"
+$form.Text = "Base64 Converter (.jpg, .gif, .png, .exe, .zip)"
 $form.Size = New-Object System.Drawing.Size(280, 140)
 $form.Icon = [System.Drawing.Icon]::FromHandle((New-Object System.Drawing.Bitmap -Argument $ims).GetHIcon())
 $form.StartPosition = "CenterScreen"
