@@ -135,5 +135,21 @@ $frombase64Button.Add_Click({
     }
 })
 
+$Help_Image = New-Object System.Windows.Forms.Label
+$IconBase64 = 'iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAxklEQVRIS8WW0Q2AIAxEZTz/HcKRHMJ/x9NAgkGE3h0Y9JfS1zsK1U3ENy/rWQs79s2hFGaAlTxPbMGKECU5A3tBegARmKt6QL4AlEA3BAFKnrN7KIh1qEznBQgTaLUp2i9B0mSpOghBvjKXEOVwKGA4pNYAqFBJSUsbeye6IEhBtLoZwgJkJX6Dt0wBBAi6jGhWoHVflAxRldwQVg17y/OXmHogS883cy6xqLHzJFbLVMgcdhrzz4xPK1BUyX8ruR1oXiD7LvmhkjZLp5jjAAAAAElFTkSuQmCC'
+$IconBytes = [Convert]::FromBase64String($IconBase64)
+$Stream = [System.IO.MemoryStream]::new($IconBytes, 0, $IconBytes.Length)
+$Custom_Bookmark_Help_Picture = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::new($Stream).GetHIcon()))
+$ResizedImage = $Custom_Bookmark_Help_Picture.ToBitmap().GetThumbnailImage(20, 20, $null, [System.IntPtr]::Zero)
+$Help_Image.Image = $ResizedImage
+$Help_Image.Size = New-Object System.Drawing.Size(20, 20)
+$Help_Image.Location = New-Object System.Drawing.Point(60, 77)
+$Help_Image.BringToFront()
+$form.Controls.Add($Help_Image)
+
+$Help_Image.Add_Click({
+        [System.Windows.Forms.MessageBox]::Show("Copy the Base64 code into your clipboard then click the `"From: Base64`" button.`nThe file will then be saved into your downloads folder.", "Help", 'OK', 'Information')
+    })
+
 $form.Add_Shown({ $form.Activate() })
 [void]$form.ShowDialog()
