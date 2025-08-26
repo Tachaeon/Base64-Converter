@@ -79,7 +79,7 @@ Add-Type -AssemblyName System.Drawing
 
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "Base64 Converter (.jpg, .gif, .png, .exe, .zip)"
-$form.Size = New-Object System.Drawing.Size(280, 140)
+$form.Size = New-Object System.Drawing.Size(290, 150)
 $form.Icon = [System.Drawing.Icon]::FromHandle((New-Object System.Drawing.Bitmap -Argument $ims).GetHIcon())
 $form.StartPosition = "CenterScreen"
 $form.FormBorderStyle = "FixedDialog"
@@ -98,16 +98,16 @@ $dropPanel.Controls.Add($dropPanelText)
 $form.Controls.Add($dropPanel)
 
 $dropPanel.Add_DragEnter({
-    param ($sender, $e)
-    if ($e.Data.GetDataPresent([Windows.Forms.DataFormats]::FileDrop)) {
-        $e.Effect = [System.Windows.Forms.DragDropEffects]::Copy
-    }
-})
+        param ($sender, $e)
+        if ($e.Data.GetDataPresent([Windows.Forms.DataFormats]::FileDrop)) {
+            $e.Effect = [System.Windows.Forms.DragDropEffects]::Copy
+        }
+    })
 
 $dropPanel.Add_DragDrop({
-    param ($sender, $e)
-    $files = $e.Data.GetData([Windows.Forms.DataFormats]::FileDrop)
-    if ($files.Length -gt 0) {
+        param ($sender, $e)
+        $files = $e.Data.GetData([Windows.Forms.DataFormats]::FileDrop)
+        if ($files.Length -gt 0) {
             try {
                 Base64
             }
@@ -115,7 +115,7 @@ $dropPanel.Add_DragDrop({
                 Get-Error
             }
         }
-})
+    })
 
 $frombase64Button = New-Object System.Windows.Forms.Button
 $frombase64Button.Text = "From: Base64"
@@ -124,16 +124,16 @@ $frombase64Button.Size = New-Object System.Drawing.Size(100, 30)
 $form.Controls.Add($frombase64Button)
 
 $frombase64Button.Add_Click({
-    try {
-        $base64String = Get-Clipboard
-        $outputDirectory = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path
-        Save-FileFromBase64 -Base64String $base64String -OutputDirectory $outputDirectory
-        [System.Windows.Forms.MessageBox]::Show("Your file has been saved here:`n`n$outputDirectory", "Clipboard --> Base64", 'OK', 'Information')
-    }
-    catch {
-        Get-Error
-    }
-})
+        try {
+            $base64String = Get-Clipboard
+            $outputDirectory = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path
+            Save-FileFromBase64 -Base64String $base64String -OutputDirectory $outputDirectory
+            [System.Windows.Forms.MessageBox]::Show("Your file has been saved here:`n`n$outputDirectory", "Clipboard --> Base64", 'OK', 'Information')
+        }
+        catch {
+            Get-Error
+        }
+    })
 
 $Help_Image = New-Object System.Windows.Forms.Label
 $IconBase64 = 'iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAxklEQVRIS8WW0Q2AIAxEZTz/HcKRHMJ/x9NAgkGE3h0Y9JfS1zsK1U3ENy/rWQs79s2hFGaAlTxPbMGKECU5A3tBegARmKt6QL4AlEA3BAFKnrN7KIh1qEznBQgTaLUp2i9B0mSpOghBvjKXEOVwKGA4pNYAqFBJSUsbeye6IEhBtLoZwgJkJX6Dt0wBBAi6jGhWoHVflAxRldwQVg17y/OXmHogS883cy6xqLHzJFbLVMgcdhrzz4xPK1BUyX8ruR1oXiD7LvmhkjZLp5jjAAAAAElFTkSuQmCC'
@@ -150,6 +150,14 @@ $form.Controls.Add($Help_Image)
 $Help_Image.Add_Click({
         [System.Windows.Forms.MessageBox]::Show("Copy the Base64 code into your clipboard then click the `"From: Base64`" button.`nThe file will then be saved into your downloads folder.", "Help", 'OK', 'Information')
     })
+
+# Make PowerShell Disappear
+$windowcode = '[DllImport("user32.dll")] public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);'
+$asyncwindow = Add-Type -MemberDefinition $windowcode -Name Win32ShowWindowAsync -Namespace Win32Functions -PassThru
+$null = $asyncwindow::ShowWindowAsync((Get-Process -PID $pid).MainWindowHandle, 0)
+ 
+# Force garbage collection just to start slightly lower RAM usage.
+[void][System.GC]::Collect()
 
 $form.Add_Shown({ $form.Activate() })
 [void]$form.ShowDialog()
